@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#8fd3ff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Drawing World">
+<meta name="description" content="Draw a creature on paper, snap a photo, and watch it come to life on a little island.">
+<title>Drawing World</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖍️</text></svg>">
+</head>
+<body>
+<canvas id="c"></canvas>
+<header>
+  <h1>Drawing World</h1>
+  <span><span id="count">0 creatures</span> <button id="reset" class="mini" title="Start a fresh island">🧹</button></span>
+</header>
+<div id="toast" hidden></div>
+<div id="bubble" hidden></div>
+<footer>
+  <label class="btn primary" id="snap">
+    📷 Snap a drawing
+    <input id="file" type="file" accept="image/*" capture="environment" hidden>
+  </label>
+  <button class="btn" id="sample">✏️ Try a sample</button>
+</footer>
+<p id="hint">Tap a creature to say hi · drag to look around</p>
+<noscript>Drawing World needs JavaScript.</noscript>
+<script type="module" src="main.js"></script>
+</body>
+</html>
