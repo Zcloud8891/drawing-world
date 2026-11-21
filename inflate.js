@@ -9,8 +9,15 @@ export function inflate(cut) {
   const sq = document.createElement('canvas'); sq.width = sq.height = T;
   const k = (T - 8) / Math.max(cut.width, cut.height), dw = cut.width * k, dh = cut.height * k;
   const ctx = sq.getContext('2d', { willReadFrequently: true });
-  ctx.drawImage(cut, (T - dw) / 2, T - 4 - dh, dw, dh);
-  const a = ctx.getImageData(0, 0, T, T).data;
+  const ox = (T - dw) / 2, oy = T - 4 - dh;
+  // bleed edge colours outward so linear filtering doesn't paint a dark fringe at the silhouette
+  for (const r of [6, 4, 2]) for (const [dx, dy] of [[r, 0], [-r, 0], [0, r], [0, -r], [r, r], [-r, -r], [r, -r], [-r, r]]) ctx.drawImage(cut, ox + dx, oy + dy, dw, dh);
+  ctx.drawImage(cut, ox, oy, dw, dh);
+  const spread = ctx.getImageData(0, 0, T, T);
+  ctx.clearRect(0, 0, T, T); ctx.drawImage(cut, ox, oy, dw, dh);
+  const plain = ctx.getImageData(0, 0, T, T), a = plain.data;
+  for (let p = 0; p < a.length; p += 4) if (a[p + 3] < 250) { a[p] = spread.data[p]; a[p + 1] = spread.data[p + 1]; a[p + 2] = spread.data[p + 2]; }
+  ctx.putImageData(plain, 0, 0);
   const V = G + 1, inside = new Uint8Array(V * V);
   for (let j = 0; j < V; j++) for (let i = 0; i < V; i++) {
     const px = Math.min(T - 1, Math.round(i / G * (T - 1))), py = Math.min(T - 1, Math.round(j / G * (T - 1)));

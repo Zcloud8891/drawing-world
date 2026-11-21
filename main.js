@@ -141,7 +141,7 @@ function goPlush(c, announce) {
 function addCreature(meta, cut, dropIn) {
   const root = new THREE.Group();
   const a = Math.random() * Math.PI * 2, d = Math.random() * 3.5;
-  root.position.set(Math.cos(a) * d, dropIn ? 8 : 0, Math.sin(a) * d * 0.6);
+  root.position.set(Math.cos(a) * Math.min(d, 2), dropIn ? 8 : 0, Math.sin(a) * d * 0.6);
   const c = { meta, cut, root, body: null, t: Math.random() * 10, vy: 0, target: null, wait: Math.random() * 2, pop: 0 };
   if (meta.stage === '3d') { c.body = plushBody(cut); } else { c.body = paperBody(cut); }
   root.add(c.body); scene.add(root);
@@ -155,7 +155,8 @@ function pickTarget() {
   for (let i = 0; i < 20; i++) {
     const a = Math.random() * Math.PI * 2, d = Math.sqrt(Math.random()) * (WORLD_R - 1.5);
     const x = Math.cos(a) * d, z = Math.sin(a) * d;
-    if (z < 3.5 && obstacles.every((o) => Math.hypot(o.x - x, o.z - z) > o.r + 0.6)) return new THREE.Vector3(x, 0, z);
+    const xLim = Math.max(2.4, 10.5 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect * 0.85);  // stay on screen in portrait
+    if (z < 3.5 && Math.abs(x) < xLim && obstacles.every((o) => Math.hypot(o.x - x, o.z - z) > o.r + 0.6)) return new THREE.Vector3(x, 0, z);
   }
   return new THREE.Vector3(0, 0, 0);
 }
